@@ -31,45 +31,40 @@ mcp = FastMCP("Cyber Security MCP Server")
 FLOWISE_CHATFLOW_URL = ""      # Example: http://localhost:3000/api/v1/prediction/<chatflow-id>
 FLOWISE_API_KEY = ""           # Optional
 
-NVD_API_KEY = ""               # Optional but recommended
+with open(r"E:\Lenovo Ideapad 330\company-material\digital-workforce-transformation\ai-upskill-9\key-vault\nvd-database\api.key") as f:
+    nvd_api_key = f.read().strip()
+NVD_API_KEY = nvd_api_key
 
 # ---------------------------------------------------------------------
 # Tool 1 : CIS RAG
 # ---------------------------------------------------------------------
 
 @mcp.tool
-def ask_cis(question: str) -> str:
-    """Query the existing Flowise CIS RAG chatflow."""
-    if not FLOWISE_CHATFLOW_URL:
-        return "FLOWISE_CHATFLOW_URL not configured."
+def ask_cis_windows11(question: str) -> str:
+    """Query the Flowise workflow knowledge base for CIS benchmarks and security guidance.
 
-    headers = {}
-    if FLOWISE_API_KEY:
-        headers["Authorization"] = f"Bearer {FLOWISE_API_KEY}"
-
+    Args:
+        question: The security question or topic to search.
+    """
+    url = "http://localhost:7860/api/v2/workflows"
+    headers = {
+        "Content-Type": "application/json",
+        "x-api-key": "sk-qNz-70oQVfAE8wvyRadRAVpwVDbfBtxcj_ivZNHx_Ow",
+    }
     payload = {
-        "question": question
+        "flow_id": "eef87fb7-0ffe-4987-9be8-2e17813b7eb0",
+        "input_value": question,
     }
 
-    r = requests.post(
-        FLOWISE_CHATFLOW_URL,
-        json=payload,
-        headers=headers,
-        timeout=60,
-    )
-    r.raise_for_status()
+    try:
+        response = requests.post(url, json=payload, headers=headers, timeout=30)
+        response.raise_for_status()
+        result = response.json()
 
-    data = r.json()
-
-    if isinstance(data, dict):
-        return (
-            data.get("text")
-            or data.get("answer")
-            or data.get("response")
-            or str(data)
-        )
-
-    return str(data)
+        # Safely extract output text
+        return result.get("output", {}).get("text", "No output returned.")
+    except requests.RequestException as e:
+        return f"Error executing CIS workflow request: {e}"
 
 
 # ---------------------------------------------------------------------

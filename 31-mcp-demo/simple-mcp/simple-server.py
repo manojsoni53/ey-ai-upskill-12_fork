@@ -66,28 +66,31 @@ def health_check():
 # ==================================================
 
 @mcp.tool
-def ask_cis_windows11(
-    question: str
-):
+def ask_cis_windows11(question: str) -> str:
+    """Query the Flowise workflow knowledge base for CIS benchmarks and security guidance.
 
+    Args:
+        question: The security question or topic to search.
     """
-    Query CIS Windows 11
-    knowledge base through Flowise.
-    """
-
+    url = "http://localhost:7860/api/v2/workflows"
+    headers = {
+        "Content-Type": "application/json",
+        "x-api-key": "sk-qNz-70oQVfAE8wvyRadRAVpwVDbfBtxcj_ivZNHx_Ow",
+    }
     payload = {
-        "question": question
+        "flow_id": "eef87fb7-0ffe-4987-9be8-2e17813b7eb0",
+        "input_value": question,
     }
 
-    response = requests.post(
-        FLOWISE_API_URL,
-        json=payload,
-        timeout=60
-    )
+    try:
+        response = requests.post(url, json=payload, headers=headers, timeout=30)
+        response.raise_for_status()
+        result = response.json()
 
-    response.raise_for_status()
-
-    return response.json()
+        # Safely extract output text
+        return result.get("output", {}).get("text", "No output returned.")
+    except requests.RequestException as e:
+        return f"Error executing CIS workflow request: {e}"
 
 
 # ==================================================

@@ -1,0 +1,50 @@
+Query: xyz
+Response:
+Final Answer:
+
+To secure Windows SMB against the latest attacks, follow these validated best practices based on current CIS benchmarks and known vulnerabilities:
+
+1. **Set the minimum SMB protocol version to SMB v3.1.1**  
+   This is the most secure SMB version, offering encryption and improved security features.
+
+2. **Disable SMBv1**  
+   SMBv1 is outdated and highly vulnerable to attacks such as session hijacking and replay attacks. Disabling it reduces exposure to many known exploits.
+
+3. **Enable auditing for unencrypted SMB traffic**  
+   This helps detect insecure SMB connections and potential attack attempts.
+
+4. **Keep Windows systems fully patched**  
+   Regularly apply Microsoft security updates to protect against newly discovered SMB vulnerabilities.
+
+5. **Restrict SMB access via firewalls and network segmentation**  
+   Limit SMB traffic to trusted hosts and networks only.
+
+6. **Monitor SMB traffic for unusual activity**  
+   Use logging and intrusion detection to identify suspicious behavior.
+
+7. **Use strong authentication and encryption**  
+   SMB v3 supports encryption to protect data in transit.
+
+These steps can be configured via Group Policy:
+
+- To mandate minimum SMB version:  
+  `Computer Configuration\Policies\Administrative Templates\Network\Lanman Server\Mandate the minimum version of SMB`
+
+- To enable auditing of unencrypted SMB traffic:  
+  `Computer Configuration\Policies\Administrative Templates\Network\Lanman Workstation\Audit server does not support encryption`
+
+By implementing these controls, you mitigate risks from known SMB vulnerabilities (including those documented in CVEs) and enhance your environment’s resilience against the latest SMB-related attacks.
+
+---
+
+Validation Score: 9/10  
+The response is comprehensive, aligns with authoritative CIS guidance, addresses CVE-related risks, and provides actionable configuration steps. It could be improved slightly by including direct references to the latest specific CVEs if available, but overall it is accurate and practical.
+
+
+
+Query:
+Response:
+
+
+Query:
+Response:
