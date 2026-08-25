@@ -28,3 +28,7 @@ Test all the 10 queries
 Deliverable:
 Text file containing the results of the 10 queries
 
+Folder in SharePoint:
+<fname>_<lname>
+   - results.txt
+
